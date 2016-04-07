@@ -516,14 +516,14 @@ bool CDVDDemuxFFmpeg::Open(std::shared_ptr<CDVDInputStream> pInput, bool streami
 
   UpdateCurrentPTS();
 
-  if (!fileinfo && m_pInput->IsStreamType(DVDSTREAM_TYPE_BLURAY))
+  if (!fileinfo)
   {
-    CDVDInputStreamBluray *bluRay = static_cast<CDVDInputStreamBluray*>(m_pInput);
-    if (bluRay->HasMVC())
+    const std::shared_ptr<CDVDInputStream::IExtentionStream> pExt = std::dynamic_pointer_cast<CDVDInputStream::IExtentionStream>(m_pInput);
+    if (pExt && pExt->HasExtention())
     {
       delete m_pSSIF;
       m_pSSIF = new CDemuxStreamSSIF();
-      m_pSSIF->SetBluRay(bluRay);
+      m_pSSIF->SetBluRay(pExt);
     }
   }
   // in case of mpegts and we have not seen pat/pmt, defer creation of streams
@@ -1600,13 +1600,13 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int streamIdx)
               pStream->codecpar->codec_tag = MKTAG('A', 'M', 'V', 'C');
 
               AVStream* mvcStream = nullptr;
-              if (m_pInput->IsStreamType(DVDSTREAM_TYPE_BLURAY))
+              const std::shared_ptr<CDVDInputStream::IExtentionStream> pExt = std::dynamic_pointer_cast<CDVDInputStream::IExtentionStream>(m_pInput);
+              if (pExt)
               {
-                CDVDInputStreamBluray *bluRay = static_cast<CDVDInputStreamBluray*>(m_pInput);
-                if (bluRay->HasMVC())
+                if (pExt->HasExtention())
                 {
-                  st->stereo_mode = bluRay->AreEyesFlipped() ? "block_rl" : "block_lr";
-                  mvcStream = static_cast<CDemuxMVC*>(bluRay->GetDemuxMVC())->GetAVStream();
+                  st->stereo_mode = pExt->AreEyesFlipped() ? "block_rl" : "block_lr";
+                  mvcStream = static_cast<CDemuxMVC*>(pExt->GetExtentionDemux())->GetAVStream();
                 }
               }
               else
