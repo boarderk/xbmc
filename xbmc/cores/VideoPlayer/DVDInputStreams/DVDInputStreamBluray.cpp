@@ -740,6 +740,8 @@ void CDVDInputStreamBluray::ProcessEvent() {
       || m_clip != m_clipQueue.front()))
   {
     m_clipQueue.push(m_clip);
+    if (m_pMVCDemux == NULL)
+      OpenNextStream();
   }
 }
 
