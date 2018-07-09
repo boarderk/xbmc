@@ -56,9 +56,9 @@
 #define LOGWINDOWING  (1 << (LOGMASKBIT + 14))
 #define LOGPVR        (1 << (LOGMASKBIT + 15))
 #define LOGEPG        (1 << (LOGMASKBIT + 16))
-#define LOGOMXPLAYER  (1 << (LOGMASKBIT + 28))
-#define LOGDUMPVIDEO  (1 << (LOGMASKBIT + 29))
-#define LOGDUMPAUDIO  (1 << (LOGMASKBIT + 30))
+#define LOGOMXPLAYER  (1 << (LOGMASKBIT + 24))
+#define LOGDUMPVIDEO  (1 << (LOGMASKBIT + 25))
+#define LOGDUMPAUDIO  (1 << (LOGMASKBIT + 26))
 
 #include "utils/params_check_macros.h"
 
